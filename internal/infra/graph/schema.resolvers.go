@@ -6,14 +6,29 @@ package graph
 
 import (
 	"context"
-	"fmt"
+	usecase "github.com/PGabrielDev/clean-archi-go/internal/usecases"
 
 	"github.com/PGabrielDev/clean-archi-go/internal/infra/graph/model"
 )
 
 // CreateOrder is the resolver for the createOrder field.
 func (r *mutationResolver) CreateOrder(ctx context.Context, input *model.OrderInput) (*model.Order, error) {
-	panic(fmt.Errorf("not implemented: CreateOrder - createOrder"))
+	orderEntity := usecase.OrderInputDTO{input.ID, input.Price, input.Tax}
+
+	order, err := r.CreateOrderUseCase.Execute(orderEntity)
+
+	if err != nil {
+		return nil, err
+	}
+
+	output := &model.Order{
+		ID:         order.ID,
+		Price:      order.Price,
+		Tax:        order.Tax,
+		FinalPrice: order.FinalPrice,
+	}
+
+	return output, nil
 }
 
 // Mutation returns MutationResolver implementation.
