@@ -58,7 +58,7 @@ func main() {
 		GraphQLPort = "8081"
 	}
 
-	srv := handler_gph.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{CreateOrderUseCase: usecaseCreateOrder}}))
+	srv := handler_gph.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{CreateOrderUseCase: *usecaseCreateOrder}}))
 
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	http.Handle("/query", srv)
@@ -74,7 +74,6 @@ func main() {
 		panic(err)
 	}
 	go grpcService.Serve(listen)
-	println("TEste do cego")
 	webServer := webserver.NewWebServer(envs.WebServerPort)
 	orderHandler := web.NewWebOrderHandler(eventDispacher, repository)
 	webServer.AddHandler("/orders", orderHandler.Create)
