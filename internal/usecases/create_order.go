@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"github.com/PGabrielDev/clean-archi-go/internal/entity"
+	events2 "github.com/PGabrielDev/clean-archi-go/internal/events"
 	"github.com/PGabrielDev/clean-archi-go/pkg/events"
 )
 
@@ -26,13 +27,12 @@ type CreateOrderUseCase struct {
 
 func NewCreateOrderUseCase(
 	OrderRepository entity.OrderRepositoryInterface,
-	OrderCreated events.EventInterface,
 	EventDispatcher events.EventDispatcherInterface,
 ) *CreateOrderUseCase {
 	return &CreateOrderUseCase{
 		OrderRepository: OrderRepository,
-		OrderCreated:    OrderCreated,
 		EventDispatcher: EventDispatcher,
+		OrderCreated:    &events2.OrderCreatedEvent{},
 	}
 }
 
@@ -53,7 +53,6 @@ func (c *CreateOrderUseCase) Execute(input OrderInputDTO) (OrderOutputDTO, error
 		Tax:        order.Tax,
 		FinalPrice: order.Price + order.Tax,
 	}
-
 	c.OrderCreated.SetPayload(dto)
 	c.EventDispatcher.Dispatch(c.OrderCreated)
 

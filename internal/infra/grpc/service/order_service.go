@@ -12,15 +12,21 @@ type OrderService struct {
 }
 
 func (o *OrderService) CreateOrder(ctx context.Context, createOrderRequest *pb2.CreateOrderRequest) (*pb2.CreateOrderResponse, error) {
-	orderDTO := usecase.OrderInputDTO{ID: createOrderRequest.Id, Price: float64(createOrderRequest.Price), Tax: float64(createOrderRequest.Tax)}
+	orderDTO := usecase.OrderInputDTO{ID: createOrderRequest.Id, Price: createOrderRequest.Price, Tax: createOrderRequest.Tax}
 	order, err := o.CreateOrderUseCase.Execute(orderDTO)
 	if err != nil {
 		return nil, err
 	}
 	return &pb2.CreateOrderResponse{
 		Id:         order.ID,
-		Price:      float32(order.Price),
-		Tax:        float32(order.Tax),
-		FinalPrice: float32(order.FinalPrice),
+		Price:      order.Price,
+		Tax:        order.Tax,
+		FinalPrice: order.FinalPrice,
 	}, nil
+}
+
+func NewOrderService(createOrderUseCase usecase.CreateOrderUseCase) *OrderService {
+	return &OrderService{
+		CreateOrderUseCase: createOrderUseCase,
+	}
 }

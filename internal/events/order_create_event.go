@@ -1,23 +1,27 @@
 package events
 
-import "time"
+import (
+	"time"
+)
 
 type OrderCreatedEvent struct {
-	Name    string
-	Payload interface{}
+	Name     string
+	DateTime time.Time
+	Payload  interface{}
 }
 
-func (o *OrderCreatedEvent) GetName() string {
-	return o.Name
-}
-func (o *OrderCreatedEvent) GetDateTime() time.Time {
-	return time.Now()
-}
-func (o *OrderCreatedEvent) GetPayload() interface{} {
-	return o.Payload
-}
-func (o *OrderCreatedEvent) SetPayload(payload interface{}) {
-	o.Payload = payload
+func (e OrderCreatedEvent) GetName() string {
+	return e.Name
 }
 
+func (e OrderCreatedEvent) GetDateTime() time.Time {
+	return e.DateTime
+}
 
+func (e OrderCreatedEvent) GetPayload() interface{} {
+	return e.Payload
+}
+
+func (e *OrderCreatedEvent) SetPayload(payload interface{}) {
+	e.Payload = payload
+}
